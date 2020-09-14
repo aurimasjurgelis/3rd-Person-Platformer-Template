@@ -5,11 +5,8 @@ using UnityEngine;
 public class BossController : MonoBehaviour
 {
     public static BossController instance;
-
     public Animator anim;
-
     public GameObject victoryZone;
-
     public float waitToShowExit;
 
     public enum BossPhase
@@ -23,7 +20,7 @@ public class BossController : MonoBehaviour
 
     public BossPhase currentPhase = BossPhase.intro;
 
-    public int bossMusic, bossDeath, bossDeathShout, bossHit; //transform this into Enum?
+    public string bossMusicName, bossDeathSoundName, bossDeathShoutSoundName, bossHitSoundName;
 
 
     private void Awake()
@@ -34,10 +31,8 @@ public class BossController : MonoBehaviour
 
     private void OnEnable()
     {
-        //AudioManager.instance.PlayMusic(bossMusic);
+        AudioManager.instance.PlayMusic(bossMusicName);
     }
-
-    // Update is called once per frame
     void Update()
     {
 
@@ -48,16 +43,11 @@ public class BossController : MonoBehaviour
             anim.SetBool("Phase2", false);
             anim.SetBool("Phase3", false);
 
-            //AudioManager.instance.PlayMusic(AudioManager.instance.levelMusicToPlay);
+            AudioManager.instance.PlayMusic(AudioManager.instance.levelMusicToPlay);
             gameObject.SetActive(false);
             BossActivator.instance.gameObject.SetActive(true);
             BossActivator.instance.entrance.SetActive(true);
-
-
             GameManager.instance.isRespawning = false;
-
-
-
         }
 
     }
@@ -65,7 +55,7 @@ public class BossController : MonoBehaviour
 
     public void DamageBoss()
     {
-        //AudioManager.instance.PlaySFX(bossHit);
+        AudioManager.instance.PlaySoundEffect(bossHitSoundName);
         currentPhase++;
 
         if(currentPhase != BossPhase.end)
@@ -74,22 +64,20 @@ public class BossController : MonoBehaviour
         }
 
         switch(currentPhase)
-
         {
             case BossPhase.phase1:
                 anim.SetBool("Phase1", true);
                 break;
 
             case BossPhase.phase2:
-                anim.SetBool("Phase1", false);
                 anim.SetBool("Phase2", true);
+                anim.SetBool("Phase1", false);
                 break;
             case BossPhase.phase3:
-                anim.SetBool("Phase2", false);
                 anim.SetBool("Phase3", true);
+                anim.SetBool("Phase2", false);
                 break;
             case BossPhase.end:
-                //anim.SetBool("Phase3", false);
                 anim.SetTrigger("End");
                 StartCoroutine(EndBoss());
                 break;
@@ -100,10 +88,9 @@ public class BossController : MonoBehaviour
 
     IEnumerator EndBoss()
     {
-        //AudioManager.instance.PlaySFX(bossDeath);
-        //AudioManager.instance.PlaySFX(bossDeathShout);
-        //AudioManager.instance.PlayMusic(AudioManager.instance.levelMusicToPlay);
-
+        AudioManager.instance.PlaySoundEffect(bossDeathSoundName);
+        AudioManager.instance.PlaySoundEffect(bossDeathShoutSoundName);
+        AudioManager.instance.PlayMusic(AudioManager.instance.levelMusicToPlay);
         yield return new WaitForSeconds(waitToShowExit);
         victoryZone.SetActive(true);
     }

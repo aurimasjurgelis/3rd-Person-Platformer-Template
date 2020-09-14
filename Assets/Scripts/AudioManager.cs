@@ -8,40 +8,46 @@ public class AudioManager : MonoBehaviour
     public static AudioManager instance;
 
     public AudioSource[] music;
-    public AudioSource[] sfx;
+    public AudioSource[] soundEffects;
 
-    public int levelMusicToPlay;
+    private Dictionary<string, AudioSource> soundEffectMap = new Dictionary<string, AudioSource>();
+    private Dictionary<string, AudioSource> musicMap = new Dictionary<string, AudioSource>();
+
+    public string levelMusicToPlay;
 
     public AudioMixerGroup musicMixer, sfxMixer;
 
     public void Awake()
     {
         instance = this;
+        foreach(var m in music)
+        {
+            musicMap.Add(m.name, m);
+        }
+        foreach (var soundEffect in soundEffects)
+        {
+            musicMap.Add(soundEffect.name, soundEffect);
+        }
     }
 
-
-    // Start is called before the first frame update
     void Start()
     {
-        //PlayMusic(levelMusicToPlay);
+        PlayMusic(levelMusicToPlay);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void PlayMusic(string musicToPlay)
     {
-        
-    }
-
-    public void PlayMusic(int musicToPlay)
-    {
-        for (int i = 0; i < music.Length; i++)
+        foreach (var m in musicMap)
         {
-            music[i].Stop();
+            m.Value.Stop();
         }
-
-        music[musicToPlay].Play();
+        musicMap[musicToPlay].Play();
     }
 
+    public void PlaySoundEffect(string soundEffectName)
+    {
+        soundEffectMap[soundEffectName].Play();
+    }
 
     public void SetMusicLevel()
     {

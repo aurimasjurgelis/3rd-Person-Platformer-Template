@@ -4,37 +4,23 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
-    public GameObject cpOn, cpOff;
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
+    public GameObject checkpointOn, checkpointOff;
+    public string soundToPlay;
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player")
         {
             GameManager.instance.SetSpawnPoint(transform.position);
-            Checkpoint[] allCP = FindObjectsOfType<Checkpoint>();
-            for(int i = 0; i < allCP.Length;i++)
+            Checkpoint[] allCheckpoints = FindObjectsOfType<Checkpoint>();
+            for(int i = 0; i < allCheckpoints.Length;i++)
             {
-                allCP[i].cpOff.SetActive(true);
-                allCP[i].cpOn.SetActive(false);
+                allCheckpoints[i].checkpointOff.SetActive(true);
+                allCheckpoints[i].checkpointOn.SetActive(false);
             }
-            //Debug.Log("Spawn Point Set");
-            cpOff.SetActive(false);
-            cpOn.SetActive(true);
+            checkpointOff.SetActive(false);
+            checkpointOn.SetActive(true);
+            AudioManager.instance.PlaySoundEffect(soundToPlay);
         }
     }
 }

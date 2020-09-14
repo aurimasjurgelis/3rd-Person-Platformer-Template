@@ -5,7 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class LSLevelEntry : MonoBehaviour
 {
-	public string levelName, levelToCheck, displayName;
+	public string levelName;
+	public string levelToCheck;
+	public string displayName;
 
 
 	private bool canLoadLevel;
@@ -16,7 +18,6 @@ public class LSLevelEntry : MonoBehaviour
 	public GameObject mapPointInactive;
 
 
-	// Start is called before the first frame update
 	void Start()
 	{
 		if(PlayerPrefs.GetInt(levelToCheck+"_unlocked")== 1 || levelToCheck == "")
@@ -35,22 +36,14 @@ public class LSLevelEntry : MonoBehaviour
 			PlayerController.instance.transform.position = transform.position;
 			LSResetPosition.instance.respawnPosition = transform.position;
 		}
-
-
 	}
 
-	
-
-	// Update is called once per frame
 	void Update()
 	{
 		if (Input.GetButtonDown("Jump") && canLoadLevel && levelUnlocked && !levelLoading)
 		{
 			StartCoroutine(LevelLoadCo());
 			levelLoading = true;
-
-
-			//SceneManager.LoadScene(levelName);
 		}
 	}
 
@@ -65,7 +58,6 @@ public class LSLevelEntry : MonoBehaviour
 
 			if (PlayerPrefs.HasKey(levelName + "_coins"))
 			{
-				Debug.Log("has key");
 				LSUIManager.instance.coinsText.text = PlayerPrefs.GetInt(levelName + "_coins").ToString();
 			} else
 			{
@@ -80,7 +72,6 @@ public class LSLevelEntry : MonoBehaviour
 		if(other.tag == "Player")
 		{
 			canLoadLevel = false;
-
 			LSUIManager.instance.levelNamePanel.SetActive(false);
 		}
 	}

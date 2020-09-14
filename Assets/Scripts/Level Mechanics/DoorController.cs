@@ -25,10 +25,8 @@ public class DoorController : MonoBehaviour
         if(theButton.isPressed)
         {
             theDoor.rotation = Quaternion.Slerp(theDoor.rotation, openRotation.rotation, openSpeed * Time.deltaTime);
-            Debug.Log("shouldOpen " + openRotation.rotation);
         } else
         {
-            Debug.Log("!shouldOpen " + startRotation);
             theDoor.rotation = Quaternion.Slerp(theDoor.rotation, startRotation, openSpeed * Time.deltaTime);
         }
 

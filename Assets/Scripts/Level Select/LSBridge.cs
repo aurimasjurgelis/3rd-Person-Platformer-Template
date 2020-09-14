@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class LSBridge : MonoBehaviour
 {
-    // Start is called before the first frame update
-
     public string levelToUnlock;
-
     void Start()
     {
         if(PlayerPrefs.GetInt(levelToUnlock + "_unlocked") == 0)
@@ -15,5 +12,4 @@ public class LSBridge : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
-
 }

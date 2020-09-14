@@ -6,31 +6,17 @@ public class BossActivator : MonoBehaviour
 {
     public static BossActivator instance;
 
+    public GameObject entrance;
+    public GameObject theBoss;
 
     private void Awake()
     {
         instance = this;
     }
 
-
-    public GameObject entrance, theBoss;
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Player")
+        if (other.tag == "Player")
         {
             entrance.SetActive(false);
             theBoss.SetActive(true);

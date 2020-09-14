@@ -14,9 +14,9 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 moveDirection;
 
-    public CharacterController charController;
+    public CharacterController characterController;
 
-    private Camera theCam;
+    private new Camera camera;
 
     public GameObject playerModel;
     public float rotateSpeed;
@@ -29,7 +29,6 @@ public class PlayerController : MonoBehaviour
     public Vector2 knockbackPower;
 
     public GameObject[] playerPieces;
-    // Start is called before the first frame update
 
     public bool stopMove;
 
@@ -40,7 +39,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        theCam = Camera.main;
+        camera = Camera.main;
     }
 
     // Update is called once per frame
@@ -51,42 +50,31 @@ public class PlayerController : MonoBehaviour
         {
 
             float yStore = moveDirection.y;
-            //moveDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
             moveDirection = (transform.forward * Input.GetAxisRaw("Vertical")) + (transform.right * Input.GetAxisRaw("Horizontal"));
-            moveDirection = (transform.forward * SimpleInput.GetAxisRaw("Vertical")) + (transform.right * SimpleInput.GetAxisRaw("Horizontal"));
             moveDirection.Normalize();
             moveDirection = moveDirection * moveSpeed;
             moveDirection.y = yStore;
 
-            if(charController.isGrounded)
+            if(characterController.isGrounded)
             {
-                //moveDirection.y = 0f; this causes the idle/jump bug !!!!!!!!!!
-                if (Input.GetButtonDown("Jump") || SimpleInput.GetButtonDown("Jump"))
+                moveDirection.y = 0f;   
+
+                if (Input.GetButtonDown("Jump"))
                 {
                     moveDirection.y = jumpForce;
-
                 }
             }
 
             moveDirection.y += Physics.gravity.y * Time.deltaTime * gravityScale;
 
-            /*
-            transform.position = transform.position + (moveDirection * Time.deltaTime * moveSpeed);
-            */
-            charController.Move(moveDirection * Time.deltaTime);
+            characterController.Move(moveDirection * Time.deltaTime);
 
             if(Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
             {
-                transform.rotation = Quaternion.Euler(0f, theCam.transform.rotation.eulerAngles.y, 0f);
+                transform.rotation = Quaternion.Euler(0f, camera.transform.rotation.eulerAngles.y, 0f);
                 Quaternion newRotation = Quaternion.LookRotation(new Vector3(moveDirection.x, 0f, moveDirection.z));
-                //playerModel.transform.rotation = newRotation;
                 playerModel.transform.rotation = Quaternion.Slerp(playerModel.transform.rotation, newRotation, rotateSpeed * Time.deltaTime);
             }
-
-
-
-
-
         }
 
         
@@ -98,13 +86,13 @@ public class PlayerController : MonoBehaviour
             moveDirection = (playerModel.transform.forward * -knockbackPower.x);
             moveDirection.y = yStore;
 
-            //buggy!!
-            if (charController.isGrounded)
+            if (characterController.isGrounded)
             {
                 moveDirection.y = 0f;
             }
+
             moveDirection.y += Physics.gravity.y * Time.deltaTime * gravityScale;
-            charController.Move(moveDirection * Time.deltaTime);
+            characterController.Move(moveDirection * Time.deltaTime);
 
 
             if (knockbackCounter <= 0)
@@ -117,13 +105,13 @@ public class PlayerController : MonoBehaviour
         {
             moveDirection = Vector3.zero;
             moveDirection.y += Physics.gravity.y * Time.deltaTime * gravityScale;
-            charController.Move(moveDirection);
+            characterController.Move(moveDirection);
         }
 
 
 
         animator.SetFloat("Speed", Mathf.Abs(moveDirection.x) + Mathf.Abs(moveDirection.z));
-        animator.SetBool("Grounded", charController.isGrounded);
+        animator.SetBool("Grounded", characterController.isGrounded);
 
 
     }
@@ -133,15 +121,14 @@ public class PlayerController : MonoBehaviour
     {
         isKnocking = true;
         knockbackCounter = knockBackLength;
-        Debug.Log("Knocked back");
         moveDirection.y = knockbackPower.y;
-        charController.Move(moveDirection * Time.deltaTime);
+        characterController.Move(moveDirection * Time.deltaTime);
     }
 
 
     public void Bounce()
     {
         moveDirection.y = bounceForce;
-        charController.Move(moveDirection * Time.deltaTime);
+        characterController.Move(moveDirection * Time.deltaTime);
     }
 }

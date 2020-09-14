@@ -83,10 +83,10 @@ public class UIManager : MonoBehaviour
 
     public void SetMusicLevel()
     {
-        //AudioManager.instance.SetMusicLevel();
+        AudioManager.instance.SetMusicLevel();
     }
     public void SetSFXLevel()
     {
-        //AudioManager.instance.SetSFXLevel();
+        AudioManager.instance.SetSFXLevel();
     }
 }

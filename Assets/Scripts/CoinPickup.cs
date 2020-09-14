@@ -8,17 +8,8 @@ public class CoinPickup : MonoBehaviour
     public int value;
 
     public GameObject pickupEffect;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public string soundToPlay;
 
 
     private void OnTriggerEnter(Collider other)
@@ -28,6 +19,7 @@ public class CoinPickup : MonoBehaviour
             GameManager.instance.AddCoins(value);
             Destroy(gameObject);
             Instantiate(pickupEffect, transform.position,transform.rotation);
+            AudioManager.instance.PlaySoundEffect(soundToPlay);
         }
     }
 }

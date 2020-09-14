@@ -15,20 +15,6 @@ public class LSUIManager : MonoBehaviour
 
 	public Text levelNameText;
     public GameObject levelNamePanel;
-
     public Text coinsText;
-    // Start is called before the first frame update
 
-
-
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

@@ -5,17 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
     public static GameManager instance;
-    private Vector3 respawnPosition, camSpawnPosition;
+    private Vector3 respawnPosition;
     public GameObject deathEffect;
-
     public int currentCoins;
-
-    public int levelEndMusic = 8;
-
+    public string levelEndMusicName;
     public string levelToLoad;
-
     public bool isRespawning;
 
     private void Awake()
@@ -25,16 +20,12 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        //Cursor.visible = false;
-        //Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         respawnPosition = PlayerController.instance.transform.position;
-        camSpawnPosition = CameraController.instance.transform.position;
-
-        UIManager.instance.coinText.text = currentCoins.ToString();
-
+        AddCoins(0);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.Escape))
@@ -46,14 +37,14 @@ public class GameManager : MonoBehaviour
 
     public void Respawn()
     {
-        StartCoroutine(RespawnCo());
+        StartCoroutine(RespawnCoroutine());
         HealthManager.instance.PlayerKilled();
     }
 
-    IEnumerator RespawnCo()
+    IEnumerator RespawnCoroutine()
     {
         PlayerController.instance.gameObject.SetActive(false);
-        CameraController.instance.CMBrain.enabled = false;
+        CameraController.instance.cinemachineBrain.enabled = false;
 
         UIManager.instance.fadeToBlack = true;
 
@@ -66,8 +57,7 @@ public class GameManager : MonoBehaviour
         UIManager.instance.fadeFromBlack = true;
 
         PlayerController.instance.transform.position = respawnPosition;
-        //CameraController.instance.transform.position = camSpawnPosition;
-        CameraController.instance.CMBrain.enabled = true;
+        CameraController.instance.cinemachineBrain.enabled = true;
         PlayerController.instance.gameObject.SetActive(true);
         HealthManager.instance.ResetHealth();
     }
@@ -76,6 +66,7 @@ public class GameManager : MonoBehaviour
     public void SetSpawnPoint(Vector3 newSpawnPoint)
     {
         respawnPosition = newSpawnPoint;
+        Debug.Log("Spawn point has been set at: " + newSpawnPoint);
     }
 
     public void AddCoins(int coinsToAdd)
@@ -103,14 +94,14 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public IEnumerator LevelEndCo()
+    public IEnumerator LevelEndCoroutine()
     {
 
-        //AudioManager.instance.PlayMusic(levelEndMusic);
+        AudioManager.instance.PlayMusic(levelEndMusicName);
         PlayerController.instance.stopMove = true;
-        UIManager.instance.fadeToBlack = true;
 
         yield return new WaitForSeconds(2f);
+        UIManager.instance.fadeToBlack = true;
         Debug.Log("Level Ended");
 
 
@@ -125,8 +116,6 @@ public class GameManager : MonoBehaviour
         {
             PlayerPrefs.SetInt(SceneManager.GetActiveScene().name + "_coins", currentCoins);
         }
-
-
         SceneManager.LoadScene(levelToLoad);
     }
 

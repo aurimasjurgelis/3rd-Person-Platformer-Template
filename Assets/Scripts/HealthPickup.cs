@@ -7,18 +7,8 @@ public class HealthPickup : MonoBehaviour
 
     public int healAmount;
     public bool isFullHeal;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public GameObject pickupEffect;
+    public string healthPickupSoundName;
 
 
     private void OnTriggerEnter(Collider other)
@@ -34,6 +24,8 @@ public class HealthPickup : MonoBehaviour
             {
                 HealthManager.instance.AddHealth(healAmount);
             }
+            Instantiate(pickupEffect, transform.position, transform.rotation);
+            AudioManager.instance.PlaySoundEffect(healthPickupSoundName);
         }
     }
 }

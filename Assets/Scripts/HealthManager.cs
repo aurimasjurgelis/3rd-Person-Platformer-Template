@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class HealthManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-
     public static HealthManager instance;
     public int currentHealth;
     public int maxHealth;
 
     public float invincibleLength = 2f;
-    private float invincCounter;
+    private float invincibleCounter;
     public Sprite[] healthBarImages;
+
+    public string hurtSoundName;
 
 
 
@@ -29,20 +29,20 @@ public class HealthManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(invincCounter > 0)
+        if(invincibleCounter > 0)
         {
-            invincCounter -= Time.deltaTime;
+            invincibleCounter -= Time.deltaTime;
 
             for (int i = 0; i < PlayerController.instance.playerPieces.Length; i++)
             {
-                if(Mathf.Floor(invincCounter * 5f) % 2 == 0)
+                if(Mathf.Floor(invincibleCounter * 5f) % 2 == 0)
                 {
                     PlayerController.instance.playerPieces[i].SetActive(true);
                 } else
                 {
                     PlayerController.instance.playerPieces[i].SetActive(false);
                 }
-                if(invincCounter <= 0)
+                if(invincibleCounter <= 0)
                 {
                     PlayerController.instance.playerPieces[i].SetActive(true);
                 }
@@ -52,21 +52,21 @@ public class HealthManager : MonoBehaviour
 
     public void Hurt()
     {
-        if(invincCounter <= 0)
+        if(invincibleCounter <= 0)
         {
             currentHealth--;
-            UpdateUI();
 
             if(currentHealth <= 0)
             {
-                //DETH
                 currentHealth = 0;
                 GameManager.instance.Respawn();
             } else
             {
                 PlayerController.instance.Knockback();
-                invincCounter = invincibleLength;
+                invincibleCounter = invincibleLength;
             }
+            UpdateUI();
+            AudioManager.instance.PlaySoundEffect(hurtSoundName);
         }
     }
 
@@ -84,7 +84,6 @@ public class HealthManager : MonoBehaviour
         {
             currentHealth = maxHealth;
         }
-
         UpdateUI();
     }
 
@@ -120,5 +119,7 @@ public class HealthManager : MonoBehaviour
     {
         currentHealth = 0;
         UpdateUI();
+
+        AudioManager.instance.PlaySoundEffect(hurtSoundName);
     }
 }
